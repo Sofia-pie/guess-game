@@ -73,47 +73,43 @@ const init = () => {
 
     button.innerText = String.fromCharCode(i);
 
-    lettersContainer.appendChild(button);
-  }
-};
+    button.addEventListener('click', () => {
+      let charArray = randomWord.toUpperCase().split('');
+      let inputSpace = document.getElementsByClassName('inputSpace');
+      if (charArray.includes(button.innerText)) {
+        charArray.forEach((char, i) => {
+          if (char == button.innerText) {
+            message.innerText = 'Correct Letter';
+            message.style.color = '#60993e';
+            button.classList.add('correct');
+            inputSpace[i].innerText = char;
 
-lettersContainer.addEventListener('click', (event) => {
-  letterClicked(event.target);
-});
-
-const letterClicked = (button) => {
-  let charArray = randomWord.toUpperCase().split('');
-  let inputSpace = document.getElementsByClassName('inputSpace');
-  if (charArray.includes(button.innerText)) {
-    charArray.forEach((char, i) => {
-      if (char == button.innerText) {
-        message.innerText = 'Correct Letter';
-        message.style.color = '#60993e';
-        button.classList.add('correct');
-        inputSpace[i].innerText = char;
-
-        winCount += 1;
-        if (winCount == charArray.length) {
-          resultText.innerHTML = 'You Won';
-          startBtn.innerText = 'Restart';
+            winCount += 1;
+            if (winCount == charArray.length) {
+              resultText.innerHTML = 'You Won';
+              startBtn.innerText = 'Restart';
+              blocker();
+            }
+          }
+        });
+      } else {
+        button.classList.add('incorrect');
+        lossCount -= 1;
+        document.getElementById(
+          'chanceCount'
+        ).innerText = `Chances Left: ${lossCount}`;
+        message.innerText = 'Incorrect Letter';
+        message.style.color = '#ff0000';
+        if (lossCount == 0) {
+          word.innerHTML = `The word was: <span>${randomWord}</span>`;
+          resultText.innerHTML = 'Game over';
           blocker();
         }
       }
+      //disable clicked buttons
+      button.disabled = true;
     });
-  } else {
-    button.classList.add('incorrect');
-    lossCount -= 1;
-    document.getElementById(
-      'chanceCount'
-    ).innerText = `Chances Left: ${lossCount}`;
-    message.innerText = 'Incorrect Letter';
-    message.style.color = '#ff0000';
-    if (lossCount == 0) {
-      word.innerHTML = `The word was: <span>${randomWord}</span>`;
-      resultText.innerHTML = 'Game over';
-      blocker();
-    }
+
+    lettersContainer.appendChild(button);
   }
-  //disable clicked buttons
-  button.disabled = true;
 };
